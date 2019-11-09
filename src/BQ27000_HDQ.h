@@ -9,8 +9,8 @@
 * * http://trac.mlalonde.net/cral/browser/HDQ/ * * Revision 1 * 
 **/
 
-#ifndef HDQ_H 
-#define HDQ_H
+#ifndef BQ27000_HDQ_H 
+#define BQ27000_HDQ_H
 
 /**
  * Default pin to use if none is specified to the constructor
@@ -48,6 +48,40 @@
 #define HDQ_DELAY_TRSPS_MAX     320 /* Max: 320uS */
 #define HDQ_DELAY_BIT_TOTAL     200
 
+/*
+BQ27000
+*/
+#define BQ27000_COMMAND_CNTL    0x0100
+#define BQ27000_COMMAND_TEMP    0x0706
+#define BQ27000_COMMAND_VOLT    0x0908
+#define BQ27000_COMMAND_RM      0x1110
+#define BQ27000_COMMAND_FCC     0x1312
+#define BQ27000_COMMAND_AI      0x1514
+#define BQ27000_COMMAND_TTE     0x1716
+#define BQ27000_COMMAND_TTF     0x1918
+#define BQ27000_COMMAND_CC      0x2B2A
+#define BQ27000_COMMAND_SOC     0x2D2C
+
+/*
+BQ27000 Extended Commands
+*/
+#define BQ27000_COMMAND_DCAP    0x3D3C
+
+/*
+BQ27000
+*/
+#define BQ27545_COMMAND_FFCC    0x1918
+
+/*
+BQ27000_COMMAND_CNTL
+*/
+#define CONTROL_CONTROL_STATUS  0x0000
+#define CONTROL_DEVICE_TYPE     0x0001
+#define CONTROL_FW_VERSION      0x0002
+#define CONTROL_HW_VERSION      0x0003
+
+uint16_t BCD16bitToWord(uint16_t bcd);
+
 class HDQ {
 public:
     /**
@@ -80,6 +114,10 @@ public:
     **/
     uint8_t read(uint8_t reg);
 
+    uint16_t commandRead(uint16_t command);
+    uint16_t commandControl(uint16_t subcommand);
+    int16_t deviceType();
+
 private:
     /**
      * Port variables definition
@@ -100,4 +138,4 @@ private:
 	//uint8_t _HDQ_readPin();
 
 }; 
-#endif
+#endif // BQ27000_HDQ_H

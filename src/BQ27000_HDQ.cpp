@@ -15,47 +15,16 @@
 
 /* *********
 *	USAGE!
-* The only other thing needed is to have a string pull up (4.7K did the job, I saw 10K used in the app notes).
+* The only other thing needed is to have a string pull up (4.7K did the job, 
+* I saw 10K used in the app notes).
 ************
-
-
-#include <HDQ.h> 
-
-HDQ HDQ(HDQ_DEFAULT_PIN);
-
-uint8_t DC1;
-uint8_t DC2;
-
-void setup() {
-  Serial.begin(9600);
-}
-
-void loop() {
-
-	for (uint8_t jj = 0; jj < 0x3F; jj++) { 
-		DC1 = HDQ.read(jj);
-		DC2 = HDQ.read(jj+1);
-		int total = word(DC2, DC1);
-
-		Serial.print("Register 0x");
-		Serial.print(jj, HEX);
-		Serial.print(": ");
-		Serial.println(total);
-		jj++;
-
-	}
-	delay(2000);  
-	Serial.println("");
-}
-  
 */
-
 
 extern "C" { 
 #include <pins_arduino.h> 
 }
 #include <Arduino.h>
-#include "HDQ.h"
+#include "BQ27000_HDQ.h"
 
 #define _HDQ_readPin() (*inputReg & bitmask)>>pin // Change me to inline!*/
 
@@ -66,6 +35,18 @@ extern "C" {
 #ifndef sbi
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
+
+#ifndef BCD8_TO_BYTE
+#define BCD8_TO_BYTE(bcd) ((10*(bcd&0xF0)>>4) + (bcd&0x0F))
+#endif
+
+#ifndef BCD16_TO_WORD
+#define BCD16_TO_WORD(bcd) (1000*((bcd&0xF000)>>12) + 100*((bcd&0x0F00)>>8) + 10*((bcd&0x00F0)>>4) + (bcd&0x000F))
+#endif
+
+uint16_t BCD16bitToWord(uint16_t bcd) {
+	return (uint16_t) BCD16_TO_WORD(bcd);
+}
 
 /*
 * 
@@ -224,3 +205,43 @@ delayMicroseconds(HDQ_DELAY_TB);
 return result;
 
 }
+
+uint16_t HDQ::commandRead(uint16_t command) {
+	HDQ::write(0x0, 0x01);
+	HDQ::write(0x1, 0x00);
+	//why?
+
+	/*
+	uint8_t tmp = HDQ::read(lowByte(command));
+	return word(HDQ::read(highByte(command)), tmp);
+	*/
+	return word(HDQ::read(highByte(command)), HDQ::read(lowByte(command)));
+}
+
+uint16_t HDQ::commandControl(uint16_t subcommand) {
+	HDQ::write(lowByte(BQ27000_COMMAND_CNTL), lowByte(subcommand));
+	HDQ::write(highByte(BQ27000_COMMAND_CNTL), highByte(subcommand));
+	/*
+	return (uint16_t) word(HDQ::read(highByte(BQ27000_COMMAND_CNTL)),
+							HDQ::read(lowByte(BQ27000_COMMAND_CNTL)));
+	*/
+	uint8_t tmp = HDQ::read(lowByte(BQ27000_COMMAND_CNTL));
+	return word(HDQ::read(highByte(BQ27000_COMMAND_CNTL)), tmp);
+}
+
+int16_t HDQ::deviceType() {
+	HDQ::write(lowByte(BQ27000_COMMAND_CNTL), lowByte(CONTROL_DEVICE_TYPE));
+	HDQ::write(highByte(BQ27000_COMMAND_CNTL), highByte(CONTROL_DEVICE_TYPE));
+	uint8_t low_byte = HDQ::read(lowByte(BQ27000_COMMAND_CNTL));
+	uint8_t high_byte = HDQ::read(highByte(BQ27000_COMMAND_CNTL));
+	if (low_byte != 0xFF && high_byte != 0xFF) {
+		// convert 16-bit BCD to int.
+		return (int16_t) 100*BCD8_TO_BYTE(high_byte) + BCD8_TO_BYTE(low_byte);
+	}
+	else {
+		return -1;
+	}
+	
+}
+
+
