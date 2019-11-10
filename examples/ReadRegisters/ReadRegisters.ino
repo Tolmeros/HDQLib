@@ -1,6 +1,6 @@
-#include <HDQ.h> 
+#include <BQ2754X_HDQ.h>
 
-HDQ HDQ(HDQ_DEFAULT_PIN);
+BQ2754X_HDQ HDQ(HDQ_DEFAULT_PIN);
 
 uint8_t DC1;
 uint8_t DC2;

@@ -8,9 +8,9 @@
  * 
  */
 
-#include <BQ27000_HDQ.h>
+#include <BQ2754X_HDQ.h>
 
-HDQ HDQ(HDQ_DEFAULT_PIN); // Arduino digital pin 7
+BQ2754X_HDQ HDQ(HDQ_DEFAULT_PIN); // Arduino digital pin 7
 
 void setup() {
   Serial.begin(57600);
@@ -123,21 +123,21 @@ void loop() {
 
     /* Current charge in mAH */
     Serial.print(F("Remaining Capacity: "));
-    Serial.print(HDQ.commandRead(BQ27000_COMMAND_RM), DEC);
+    Serial.print(HDQ.commandRead(BQ2754X_COMMAND_RM), DEC);
     Serial.println(F(" mAH"));
     
     /* Full charge capacity mAH */
     Serial.print(F("Full Charge Capacity: "));
-    Serial.print(HDQ.commandRead(BQ27000_COMMAND_FCC), DEC);
+    Serial.print(HDQ.commandRead(BQ2754X_COMMAND_FCC), DEC);
     Serial.println(F(" mAH"));
   
     /* Design capacity mAH */
     Serial.print(F("Design Capacity: "));
-    Serial.print(HDQ.commandRead(BQ27000_COMMAND_DCAP), DEC);
+    Serial.print(HDQ.commandRead(BQ2754X_COMMAND_DCAP), DEC);
     Serial.println(F(" mAH"));
     
     /* Time to Empty Minutes */
-    int tto = HDQ.commandRead(BQ27000_COMMAND_TTE);
+    int tto = HDQ.commandRead(BQ2754X_COMMAND_TTE);
     Serial.print(F("Time to empty: "));
     if(tto == -1){
       Serial.println(F("N/A, not discharging"));
@@ -154,7 +154,7 @@ void loop() {
       Serial.print(HDQ.commandRead(BQ27545_COMMAND_FFCC), DEC);
       Serial.println(F(" mAH"));
     } else {
-      int ttf = HDQ.commandRead(BQ27000_COMMAND_TTF);
+      int ttf = HDQ.commandRead(BQ2754X_COMMAND_TTF);
       Serial.print(F("Time to full: "));
       if(ttf == -1){
         Serial.println(F("N/A, not charging"));
@@ -166,11 +166,11 @@ void loop() {
   
     /* State of Charge % */
     Serial.print(F("State of Charge: "));
-    Serial.print(HDQ.commandRead(BQ27000_COMMAND_SOC), DEC);
+    Serial.print(HDQ.commandRead(BQ2754X_COMMAND_SOC), DEC);
     Serial.println(F("%"));
 
     /* Voltage mV */
-    int mvolts = HDQ.commandRead(BQ27000_COMMAND_VOLT);
+    int mvolts = HDQ.commandRead(BQ2754X_COMMAND_VOLT);
     float volts = (mvolts*0.001);
     Serial.print(F("Battery Voltage: "));
     Serial.print(volts);
@@ -179,7 +179,7 @@ void loop() {
     Serial.println(F("mV)"));
     
     /* Temperature (in Kelvin to C/F) */
-    int tempK = HDQ.commandRead(BQ27000_COMMAND_TEMP);
+    int tempK = HDQ.commandRead(BQ2754X_COMMAND_TEMP);
     float tempC = (tempK-2731)/10;
     float tempF = (1.8*((tempK*0.1)-273))+32;
     Serial.print(F("Temperature: "));
@@ -194,12 +194,12 @@ void loop() {
     
     /* Charge Cycle Count */
     Serial.print(F("Charge Cycle Count: "));
-    Serial.print(HDQ.commandRead(BQ27000_COMMAND_CC), DEC);
+    Serial.print(HDQ.commandRead(BQ2754X_COMMAND_CC), DEC);
     Serial.println(F(" times"));
 
     /* Average Current */
     Serial.print(F("Average Current: "));
-    Serial.print(int(HDQ.commandRead(BQ27000_COMMAND_AI)), DEC);
+    Serial.print(int(HDQ.commandRead(BQ2754X_COMMAND_AI)), DEC);
     Serial.println(F(" mA"));
 
     /* Control Status */

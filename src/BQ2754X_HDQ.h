@@ -9,8 +9,8 @@
 * * http://trac.mlalonde.net/cral/browser/HDQ/ * * Revision 1 * 
 **/
 
-#ifndef BQ27000_HDQ_H 
-#define BQ27000_HDQ_H
+#ifndef BQ2754X_HDQ_H 
+#define BQ2754X_HDQ_H
 
 /**
  * Default pin to use if none is specified to the constructor
@@ -51,21 +51,21 @@
 /*
 BQ27000
 */
-#define BQ27000_COMMAND_CNTL    0x0100
-#define BQ27000_COMMAND_TEMP    0x0706
-#define BQ27000_COMMAND_VOLT    0x0908
-#define BQ27000_COMMAND_RM      0x1110
-#define BQ27000_COMMAND_FCC     0x1312
-#define BQ27000_COMMAND_AI      0x1514
-#define BQ27000_COMMAND_TTE     0x1716
-#define BQ27000_COMMAND_TTF     0x1918
-#define BQ27000_COMMAND_CC      0x2B2A
-#define BQ27000_COMMAND_SOC     0x2D2C
+#define BQ2754X_COMMAND_CNTL    0x0100
+#define BQ2754X_COMMAND_TEMP    0x0706
+#define BQ2754X_COMMAND_VOLT    0x0908
+#define BQ2754X_COMMAND_RM      0x1110
+#define BQ2754X_COMMAND_FCC     0x1312
+#define BQ2754X_COMMAND_AI      0x1514
+#define BQ2754X_COMMAND_TTE     0x1716
+#define BQ2754X_COMMAND_TTF     0x1918
+#define BQ2754X_COMMAND_CC      0x2B2A
+#define BQ2754X_COMMAND_SOC     0x2D2C
 
 /*
 BQ27000 Extended Commands
 */
-#define BQ27000_COMMAND_DCAP    0x3D3C
+#define BQ2754X_COMMAND_DCAP    0x3D3C
 
 /*
 BQ27000
@@ -73,7 +73,7 @@ BQ27000
 #define BQ27545_COMMAND_FFCC    0x1918
 
 /*
-BQ27000_COMMAND_CNTL
+BQ2754X_COMMAND_CNTL
 */
 #define CONTROL_CONTROL_STATUS  0x0000
 #define CONTROL_DEVICE_TYPE     0x0001
@@ -82,14 +82,14 @@ BQ27000_COMMAND_CNTL
 
 uint16_t BCD16bitToWord(uint16_t bcd);
 
-class HDQ {
+class BQ2754X_HDQ {
 public:
     /**
      * Constructor
      * @param pinArg: pin number to attach to
     **/
     //HDQ(uint8_t pinArg = HDQ_DEFAULT_PIN);
-	HDQ( uint8_t pinArg);
+	BQ2754X_HDQ( uint8_t pinArg);
 
     /**
      * sendBreak: writes a break to the HDQ line
@@ -135,7 +135,7 @@ private:
      * 
     **/
     void writeByte(uint8_t payload);
-	//uint8_t _HDQ_readPin();
+	//uint8_t _BQ2754X_HDQ_readPin();
 
 }; 
-#endif // BQ27000_HDQ_H
+#endif // BQ2754X_HDQ_H
